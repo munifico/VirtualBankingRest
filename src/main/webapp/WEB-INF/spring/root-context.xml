@@ -2,21 +2,25 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
-	
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
 	<!-- Root Context: defines shared resources visible to all other web components -->
-			<!-- JNDI 커넥션 풀 -->
+	<!-- JNDI 커넥션 풀 -->
 	<!-- DataSource using Spring JNDI -->
 
 
-	<context:property-placeholder location="classpath:prop/application-com.properties"/>
+	<context:property-placeholder
+		location="classpath:prop/application-com.properties" />
 	<!-- resourceRef를 사용하지 않은 경우 jndi 속성값으로 WAS서버의 루트 디렉토리까지 적어줘야함(default:false) 
 		ex) 톰캣 java:/comp/env/~ ture로 바꿔주면 자동으로 바꿔줌 -->
-	
-	<bean id="datasourceByJNDI" class="org.springframework.jndi.JndiObjectFactoryBean">
+
+	<bean id="datasourceByJNDI"
+		class="org.springframework.jndi.JndiObjectFactoryBean">
 		<property name="jndiName" value="${DB.NAME}" />
-		<property name="resourceRef" value="true"/>
+		<property name="resourceRef" value="true" />
 	</bean>
 
 	<!-- 마이바티스 지원을 위한 빈 등록 -->
@@ -28,12 +32,20 @@
 		<property name="dataSource" ref="datasourceByJNDI" />
 		<!-- mybatis 환경설정 파일 위치 설정 -->
 		<!-- 클래스 패스 항상확인할껏! -->
-		<property name="configLocation"	value="classpath:mybatis/configuration.xml" />
+		<property name="configLocation"
+			value="classpath:mybatis/configuration.xml" />
 
 	</bean>
 	<!-- 2]SqlSessionTemplate -->
 	<bean id="template" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSessionFactory" />
 	</bean>
-		
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="datasourceByJNDI"></property>
+	</bean>
+
+	<tx:annotation-driven />
+
 </beans>

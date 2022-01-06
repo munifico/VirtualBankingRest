@@ -70,9 +70,9 @@ public class SwaggerConfig extends WebMvcConfigurationSupport{
 	                .description("Virtual Bank OpenApi 사용 설명서입니다")
 	                .version("1.0")                
 	                .termsOfServiceUrl("localhost:8950")               
-	                .contact(new Contact("jsik","https://j-sik.tistory.com/", "officialyoonsic@gmail.com"))            
+	                .contact(new Contact("jsik","https://github.com/ychic/VirtualBankingRest", "officialyoonsic@gmail.com"))            
 	                .license("CCH 2.0")
-	                .licenseUrl("https://github.com/ychic/Spring-RestAPI-Test")
+	                .licenseUrl("https://github.com/ychic/VirtualBankingRest")
 	                .extensions(new ArrayList<VendorExtension>())
 	                .build();
 		}
