@@ -2,6 +2,7 @@ package com.jsikmc15.virtualbankingrest.auth.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.jsikmc15.virtualbankingrest.dao.TotalDAO;
 import com.jsikmc15.virtualbankingrest.utils.ResponeCode;
 
-@Service
+@Service("authservice")
 public class AuthServiceImpl implements AuthService {
 
 	@Autowired
@@ -22,6 +23,12 @@ public class AuthServiceImpl implements AuthService {
 		//유저 토큰 등록
 		int affected1 = dao.insertUserToken(map);
 		
+		map.put("user_uid",map.get("no"));
+		
+		Set<String> st = map.keySet();
+		for(String atom : st) {
+			System.out.println(atom+"-"+map.get(atom));
+		}
 		
 		//유저 계좌 등록
 		int affected2 = dao.insertUserAccount(map);
@@ -36,8 +43,8 @@ public class AuthServiceImpl implements AuthService {
 	public int registOther(Map map) {
 		// TODO Auto-generated method stub
 		
-		//해당 토큰으로 된 유저 계좌 검색
-		Map data = dao.selectUserAccount(map);
+		//해당 user_seq로 된 유저 계좌 검색
+		Map data = dao.selectUserToken(map);
 		
 		
 		//유저 토큰 업데이트 

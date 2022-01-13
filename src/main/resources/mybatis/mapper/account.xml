@@ -61,6 +61,24 @@
 	</update>
 	 -->
 	 
+	<select id="selectAccount" parameterType="Map">
+		SELECT * FROM USER_ACCOUNT WHERE FINTECH_USE_NUM = #{fintech_use_num}
+	</select>
+	
+	<select id="selectAllAccounts" parameterType="Map" resultType="Map">
+		 SELECT a.* FROM user_account a join user_token t ON a.user_uid = t.no WHERE t.access_token=#{access_token}
+	</select>
+	
+	
+	<select id="selectAllTrading" parameterType="Map" resultType="Map">
+		 SELECT * FROM trading_statement WHERE wd_uid = (SELECT NO FROM USER_ACCOUNT WHERE FINTECH_USE_NUM =#{fintech_user_num}) or dps_uid = (SELECT NO FROM USER_ACCOUNT WHERE FINTECH_USE_NUM =#{fintech_user_num})    
+	</select>
+	
+	
+	<select id="updateBalance" parameterType="Map">
+		 update user_account SET balance_amt=#{balance} WHERE fintech_use_num=#{fintech_use_num}
+	</select>
+	 
 </mapper>
   
   

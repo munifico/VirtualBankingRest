@@ -10,7 +10,7 @@ public interface TransferService {
 	 */
 	
 	//거래처리 
-	public int transaction(Map map);
+	public int insertTradingStatement(Map map);
 	
 	
 }

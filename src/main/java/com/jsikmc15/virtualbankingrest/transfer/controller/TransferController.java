@@ -10,32 +10,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jsikmc15.virtualbankingrest.dao.TotalDAO;
+import com.jsikmc15.virtualbankingrest.transfer.service.TransferServiceImpl;
 import com.jsikmc15.virtualbankingrest.utils.ResponeCode;
 
 @RestController
 public class TransferController {
 
 	@Autowired
-	TotalDAO dao;
+	TransferServiceImpl tranferservice;
 	
 	@Transactional
 	@PostMapping("/transfer/fin_num")
 	public Map doTransaction(@RequestBody Map map) {
-		Map result =new HashMap();
+		Map result = new HashMap(); 
 		
-		//계좌 조회
-		Map withdraw = dao.selectAccountByFin(map);
-		Map deposit = dao.selectAccountByFin(map);
+		int affect = tranferservice.insertTradingStatement(map);
 		
 		
-		if(withdraw ==null || deposit ==null) {
-			result.put("resp_code",ResponeCode.ERROR);
-			return result
+		if(affect !=1) {
+			result.put("resp_code",ResponeCode.ERROR_PARAMETER);
+		}else {
+			result.put("resp_code",ResponeCode.OK);
 		}
-		
-//		if(widthdraw.get)
-		
-		
 		
 		return result;
 	}

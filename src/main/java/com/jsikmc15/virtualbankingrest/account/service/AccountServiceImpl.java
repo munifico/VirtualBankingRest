@@ -1,13 +1,17 @@
 package com.jsikmc15.virtualbankingrest.account.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.jsikmc15.virtualbankingrest.dao.TotalDAO;
 import com.jsikmc15.virtualbankingrest.utils.ResponeCode;
 
-public class AccountServiceImpl implements AccountService{
+@Service("accountservice")
+public class AccountServiceImpl  implements AccountService{
 
 	@Autowired
 	TotalDAO dao;
@@ -15,9 +19,9 @@ public class AccountServiceImpl implements AccountService{
 	
 	//유저 전 계좌 조회
 	@Override
-	public Map getAllAccounts(Map map) {
+	public List<Map> getAllAccounts(Map map) {
 		// TODO Auto-generated method stub
-		Map result = new HashMap();
+		List<Map> result = dao.getAllAccounts(map);
 
 		return result;
 	}
@@ -39,5 +43,21 @@ public class AccountServiceImpl implements AccountService{
 		
 		return result;
 	}
+
+
+	@Override
+	public List<Map> getAllTrading(Map map) {
+		// TODO Auto-generated method stub
+		return dao.getAllTrading(map);
+	}
+
+
+	@Override
+	public int updateBalance(Map map) {
+		// TODO Auto-generated method stub
+		return dao.updateBalance(map);
+	}
+	
+	
 
 }
