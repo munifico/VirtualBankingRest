@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="vbank.mybatis.mapper.transfer">
+
+	<insert id="">
+		 SELECT * FROM trading_statement WHERE wd_uid = (SELECT NO FROM USER_ACCOUNT WHERE FINTECH_USE_NUM =22022122) or dps_uid = (SELECT NO FROM USER_ACCOUNT WHERE FINTECH_USE_NUM =22022122);
+	</insert>
+
+	<insert id="insertTradingStatement" parameterType="Map">
+		INSERT INTO trading_statement VALUES (SEQ_TRADING_STATEMENT_NO.NEXTVAL,
+		(SELECT no FROM user_account WHERE fintech_use_num =#{wd_fintech}),#{wd_print_content},
+		(SELECT no FROM user_account WHERE fintech_use_num =#{dps_fintech}),#{dps_print_content},TO_NUMBER(#{cost}),SYSDATE)
+	</insert>
+</mapper>
+  
+  
