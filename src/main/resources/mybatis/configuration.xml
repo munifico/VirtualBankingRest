@@ -6,6 +6,8 @@
   <configuration>
   	<typeAliases>
   		<!-- <typeAlias type="com.avg12.betweeny.member.MemberDTO" alias="MemberDTO"/> -->
+  		<typeAlias type="com.jsikmc15.virtualbankingrest.dtos.AccountDTO" alias="AccountDTO"/>
+  		<typeAlias type="com.jsikmc15.virtualbankingrest.dtos.TradingDTO" alias="TradingDTO"/>
   	</typeAliases>
   	
   	<mappers>

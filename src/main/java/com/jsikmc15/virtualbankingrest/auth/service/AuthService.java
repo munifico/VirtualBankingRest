@@ -14,7 +14,14 @@ public interface AuthService {
 	//토큰 변경
 		public int registOther(Map map);
 		
-	//토큰 확인용
-		public boolean checkToken(String token);
-	
+	//인증 신청
+		public Map getAuthUrl(Map map);
+		
+		//토큰 등록
+		public Map setToken(Map map);
+		
+		//계좌 조회
+		public Map getAccountOpenBaking(Map map);
+		
+		public boolean isUser(Map map);
 }

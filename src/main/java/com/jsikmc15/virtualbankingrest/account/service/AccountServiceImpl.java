@@ -3,11 +3,15 @@ package com.jsikmc15.virtualbankingrest.account.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsikmc15.virtualbankingrest.dao.TotalDAO;
+import com.jsikmc15.virtualbankingrest.dtos.AccountDTO;
 import com.jsikmc15.virtualbankingrest.utils.ResponeCode;
 
 @Service("accountservice")
@@ -31,17 +35,16 @@ public class AccountServiceImpl  implements AccountService{
 	@Override
 	public Map getAccount(Map map) {
 		// TODO Auto-generated method stub
-		Map result = dao.selelctAccount(map);
-		
-		if(result==null) {
-			result.put("resp_code", ResponeCode.ERROR);
-		}else {
-		
-			result.put("resp_code", ResponeCode.OK);
-			
+
+		Set<String> keys = map.keySet();
+		for(String key: keys) {
+			System.out.println(key+" - "+map.get(key));
 		}
 		
-		return result;
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+		return mapper.convertValue(dao.selelctAccount(map),Map.class);
 	}
 
 
@@ -57,6 +60,7 @@ public class AccountServiceImpl  implements AccountService{
 		// TODO Auto-generated method stub
 		return dao.updateBalance(map);
 	}
+
 	
 	
 

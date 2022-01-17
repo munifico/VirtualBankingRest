@@ -35,4 +35,8 @@ public class Aspects {
 			System.out.println("Target Class NAME :" + core_concern+ " | END | Latency : " + (endTime - startTime)/1000.0 + "초");
 			return object;
 		}
+		
+		
+		
+		
 }
