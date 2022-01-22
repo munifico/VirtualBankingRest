@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.jsikmc15.virtualbankingrest.dao.TotalDAO;
 import com.jsikmc15.virtualbankingrest.dtos.OBAccountDTO;
 import com.jsikmc15.virtualbankingrest.dtos.OBUserDTO;
+import com.jsikmc15.virtualbankingrest.utils.MyUtils;
 import com.jsikmc15.virtualbankingrest.utils.ResponeCode;
 
 @Service("authservice")
@@ -119,13 +120,16 @@ public class AuthServiceImpl implements AuthService {
 //		map.put("account_type",0);
 		
 		
+		
 		Set<String> keys = map.keySet();
 		for(String key : keys) {
 			res.put(key,map.get(key));
 		}
 		res.put("user_type", 0);
 		
-		res.put("user_no","0test");
+//		res.put("user_no","0test");
+		System.out.println("<-------------------------------->");
+		MyUtils.sout(res);
 		
 		//유저 토큰 업데이트 
 		int affected1 = dao.updateUserToken(res);
