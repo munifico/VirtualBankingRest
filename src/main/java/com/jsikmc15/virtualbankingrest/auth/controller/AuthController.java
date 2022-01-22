@@ -59,6 +59,12 @@ public class AuthController {
 		System.out.println(result.get("user_seq_no"));
 		int affect = 0;
 		
+		if(result.get("user_seq_no")==null) {
+			result = new HashMap();
+			result.put("resp_code", ResponeCode.ERROR_AUTHTOKEN);
+			return result;
+		}
+		
 		Set<String> keys = result.keySet();
 		
 		for(String key : keys) {
@@ -81,7 +87,7 @@ public class AuthController {
 		
 		
 		//seq를 통해 이미 등록된 사용자인지 판단
-		if(authservice.isUser(result)) {
+		if(result.get("user_seq_no")!=null && authservice.isUser(result)) {
 			//계좌가 1회 이상 등록된 사용자라면, update 시나리오 탐
 			affect =authservice.registOther(result);
 			

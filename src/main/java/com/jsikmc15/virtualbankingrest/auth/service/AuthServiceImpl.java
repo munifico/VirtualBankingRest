@@ -214,7 +214,7 @@ public class AuthServiceImpl implements AuthService {
 		// TODO Auto-generated method stub
 		
 		Map<String,String> result = null;
-		String code = map.get("location").toString();
+		String code = map.get("code").toString();
 		String url = "https://developers.kftc.or.kr/proxy/oauth/2.0/token";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
