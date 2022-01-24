@@ -23,12 +23,12 @@ public class TotalDAO {
 
 	//auth 계열
 	public int insertUserToken(Map map) {
-		
-		Set<String> keys = map.keySet();
-		for(String key : keys) {
-			System.out.println(key+" - "+map.get(key));
-		}
-		
+//		
+//		Set<String> keys = map.keySet();
+//		for(String key : keys) {
+//			System.out.println(key+" - "+map.get(key));
+//		}
+//		
 		// TODO Auto-generated method stub
 		return template.insert("insertUserToken",map);
 	}

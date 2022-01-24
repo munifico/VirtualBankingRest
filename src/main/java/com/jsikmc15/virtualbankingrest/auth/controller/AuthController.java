@@ -2,6 +2,7 @@ package com.jsikmc15.virtualbankingrest.auth.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsikmc15.virtualbankingrest.auth.service.AuthService;
 import com.jsikmc15.virtualbankingrest.dtos.TokenDTO;
+import com.jsikmc15.virtualbankingrest.utils.MyUtils;
 import com.jsikmc15.virtualbankingrest.utils.ResponeCode;
 
 import net.bytebuddy.description.ByteCodeElement.Token;
@@ -32,8 +34,18 @@ public class AuthController {
 	@Autowired
 	AuthService authservice;
 	
-	@GetMapping("/oauth")
-	public Map getAuthUrl(@RequestParam Map map) {
+	@GetMapping(value="/oauth",produces = {"application/json;charset=utf-8"})
+	public Map getAuthUrl(@RequestParam Map map,HttpServletRequest req) {
+		
+
+		System.out.println("아니 하나도 없는게 말이야 막걸리야 ");
+		
+		if(req.getHeader("USER_SEQ_NO")!=null) {
+			map.put("USER_SEQ_NO", req.getHeader("USER_SEQ_NO"));
+			map.put("ACCESS_TOKEN", req.getHeader("ACCESS_TOKEN"));
+			map.put("USER_CI", req.getHeader("USER_CI"));
+		}
+		
 		Map result = authservice.getAuthUrl(map);
 		
 		if(result.get("location")!=null) {
@@ -97,9 +109,9 @@ public class AuthController {
 		}
 		
 		if(affect ==0 ) {
-			map.put("resp_code",ResponeCode.ERROR );
+			result.put("resp_code",ResponeCode.ERROR );
 		}else {
-			map.put("resp_code",ResponeCode.OK);
+			result.put("resp_code",ResponeCode.OK);
 		}
 		
 		return result;

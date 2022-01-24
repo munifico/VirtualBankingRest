@@ -77,7 +77,31 @@ public class AuthServiceImpl implements AuthService {
 //		map.put("balance_amt",3403403);
 //		map.put("account_type",0);
 		
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		System.out.println("값:" + res.get("res_list"));
 		
+		OBAccountDTO accountDTO =null;
+		JSONArray accounts = null;
+		try {
+			accounts = (JSONArray)res.get("res_list");
+			accountDTO = mapper.readValue(accounts.get(0).toString(), OBAccountDTO.class);
+			System.out.println(accounts);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		res.put("fintech_use_num",accountDTO.getFintech_use_num());
+		res.put("account_num_masked",accountDTO.getAccount_num_masked());
+		res.put("alias",accountDTO.getAccount_alias());
+		res.put("account_holder_name",accountDTO.getAccount_holder_name());
+		res.put("bank_name",accountDTO.getBank_name());
+		res.put("product_name",accountDTO.getBank_code_std());
+		res.put("balance_amt",new Random().nextInt()*(5000000-80000+1)+80000);
+		res.put("account_type",0);
+		map.put("user_ci", res.get("user_ci"));
 		
 		Set<String> keys = map.keySet();
 		for(String key : keys) {
@@ -89,7 +113,7 @@ public class AuthServiceImpl implements AuthService {
 		int affected1 = dao.insertUserToken(res);
 		System.out.println("<----------------->"+affected1);
 		System.out.println("<----------------->"+res.get("user_no"));
-		
+		MyUtils.sout(res);
 		//유저 계좌 등록
 		int affected2 = dao.insertUserAccount(res);
 		
@@ -162,7 +186,7 @@ public class AuthServiceImpl implements AuthService {
 		res.put("account_type",0);
 		
 		
-		
+		map.put("user_ci", res.get("user_ci"));
 		Set<String> datas = res.keySet();
 		for(String key :datas) {
 			System.out.println(key+" - " +res.get(key));
@@ -177,19 +201,21 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public Map getAuthUrl(Map map) {
 		// TODO Auto-generated method stub
-		String url = "https://developers.kftc.or.kr/proxy/oauth/2.0/authorize?response_type=code&client_id="+clientID+"&redirect_uri="+callbackURI+"&scope=login inquiry transfer&client_info=test&state=b80BLsfigm9OokPTjy03elbJqRHOfGSY&auth_type=0&cellphone_cert_yn=Y&authorized_cert_yn=Y&account_hold_auth_yn=N&register_info=A";
-	
+		int type = 0;
 
 		RestTemplate rt = new RestTemplate();
 		HttpHeaders myheader = new HttpHeaders();
 		myheader.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		HttpEntity<String> request = new HttpEntity("", myheader);
-		if(map.get("userci")!=null) {
-			myheader.add("Kftc-Bfop-UserSeqNo", map.get("user_seq_no").toString());
-			myheader.add("Kftc-Bfop-UserCI",map.get("user ci").toString());
-			myheader.add("Kftc-Bfop-AccessToken", map.get("access token").toString());
+		if(map.get("USER_CI")!=null) {
+			myheader.add("Kftc-Bfop-UserSeqNo", map.get("USER_SEQ_NO").toString());
+			myheader.add("Kftc-Bfop-UserCI",map.get("USER_CI").toString());
+			myheader.add("Kftc-Bfop-AccessToken", map.get("ACCESS_TOKEN").toString());
+			type = 2;
+			System.out.println("적용함");
 		}
-		
+		HttpEntity<String> request = new HttpEntity("", myheader);
+		String url = "https://developers.kftc.or.kr/proxy/oauth/2.0/authorize?response_type=code&client_id="+clientID+"&redirect_uri="+callbackURI+"&scope=login inquiry transfer&client_info=test&state=b80BLsfigm9OokPTjy03elbJqRHOfGSY&auth_type="+type+"&cellphone_cert_yn=Y&authorized_cert_yn=Y&account_hold_auth_yn=N&register_info=A";
+
 		
 		System.out.println("보내는 Request Entity 정보 : " + request.getHeaders());
 		System.out.println("보내는 Request Entity 정보 : " + request.getBody());
@@ -285,12 +311,12 @@ public class AuthServiceImpl implements AuthService {
 		
 			JSONParser parse = new JSONParser();
 			JSONObject json = new JSONObject((JSONObject) parse.parse(response.getBody()));
-			System.out.println("제이슨 >"+ json.toString());
-			System.out.println("제이슨 리스트>"+ json.get("res_list"));
+//			System.out.println("제이슨 >"+ json.toString());
+//			System.out.println("제이슨 리스트>"+ json.get("res_list"));
 			JSONArray arr = (JSONArray) json.get("res_list");
 			json.remove("res_list");
-			System.out.println("제이슨 어레이 JSONSTRING>"+arr.toJSONString());
-			System.out.println("제이슨 어레이 STRING>"+arr.toString());
+//			System.out.println("제이슨 어레이 JSONSTRING>"+arr.toJSONString());
+//			System.out.println("제이슨 어레이 STRING>"+arr.toString());
 //			System.out.println("테스트 시작!");
 //			for (int i = 0 ; i < arr.size();i++) {
 //				System.out.println(arr.get(i).toString());
@@ -298,7 +324,7 @@ public class AuthServiceImpl implements AuthService {
 			
 			user = mapper.readValue(response.getBody(), OBUserDTO.class);
 			
-			System.out.println(user.toString());
+//			System.out.println(user.toString());
 			result = mapper.convertValue(user, Map.class);
 			result.put("res_list", arr);
 	
@@ -310,10 +336,10 @@ public class AuthServiceImpl implements AuthService {
 			e.printStackTrace();
 		}
 
-//		result.put("user_info",user);
-		Set<String> keys = map.keySet();
+		result.put("user_info",user);
+		Set<String> keys =result.keySet();
 		for(String key : keys) {
-			System.out.println(key+" -- "+map.get(key));
+			System.out.println(key+" -- "+result.get(key));
 		}
 		System.out.println("getAccountOB OFF");
 		return result;
@@ -327,7 +353,8 @@ public class AuthServiceImpl implements AuthService {
 		int affect = dao.selectConfirmUser(map);
 		
 		
-		
+		boolean result =(affect == 1) ? true:false;
+		System.out.println("결과는 ?"+result);
 		return (affect == 1) ? true:false;
 	}
 	
