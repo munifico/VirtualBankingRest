@@ -38,16 +38,21 @@ public class AccountController {
 	
 	//계좌 전체 목록조회
 	@GetMapping(value="/user/account",produces = {"application/json"})
-	public Map getAllAccounts(@RequestParam Map map,@RequestHeader(value="Authorization",defaultValue = "Barear NONE")String authorization) {
+	public Map getAllAccounts(@RequestParam Map map,
+			@RequestHeader(value="Authorization",defaultValue = "Barear NONE")String authorization,
+			@RequestHeader Map user) {
 		StringTokenizer stk = new StringTokenizer(authorization);
 		stk.nextToken();
 		String token = stk.nextToken();
+		MyUtils.sout(user);
+		System.out.println("토큰 : " + token);
+		System.out.println("파라미터 체크 : " + user.get("user_seq_no"));
 		//토큰 검증로직 넣을 거면 여기에 넣을 것
 		Map result = new HashMap();
 		//유저가 맞는 경우 
-		if(authservice.isUser(map)) {
+		if(authservice.isUser(user)) {
 			result.put("resp_code",ResponeCode.OK);
-			result.put("res_list", accountservice.getAllAccounts(map));
+			result.put("res_list", accountservice.getAllAccounts(user));
 		}else {
 			result.put("resp_code",ResponeCode.ERROR);
 		}
@@ -57,12 +62,15 @@ public class AccountController {
 	
 	//계좌 목록중 하나 조회
 	@GetMapping("/user/account/{fin_num}")
-	public Map registOtherAccount(@RequestParam Map map,@PathVariable("fin_num") int count,@RequestHeader(value="Authorization",defaultValue = "Barear NONE")String authorization) {
+	public Map getAccount(@RequestParam Map map,@PathVariable("fin_num") String count,
+			@RequestHeader(value="Authorization",defaultValue = "Barear NONE")String authorization,
+			@RequestHeader(value="user_seq_no") String user_seq_no) {
 		StringTokenizer stk = new StringTokenizer(authorization);
 		stk.nextToken();
 		String token = stk.nextToken();
+		map.put("user_seq_no", user_seq_no);
 		map.put("fintech_use_num", String.valueOf(count));
-		System.out.println(map.get("fintech_use_num"));
+		System.out.println("캐시때문인가?"+map.get("fintech_use_num"));
 		//토큰 검증로직 넣을 거면 여기에 넣을 것
 		Map result = new HashMap();
 		//유저가 맞는 경우 
@@ -82,30 +90,34 @@ public class AccountController {
 	
 	//거래내역 조회
 	@GetMapping("/user/account/trading")
-	public List<Map> getBalance(@RequestParam Map map,@RequestHeader(value="Authorization",defaultValue = "Barear NONE") String authorization) {
+	public Map getBalance(@RequestParam Map map,
+			@RequestHeader(value="Authorization",defaultValue = "Barear NONE") String authorization,
+			@RequestHeader(value="user_seq_no") String user_seq_no,
+			@RequestHeader(value="fintech_use_num") String fintech_use_num) {
 		StringTokenizer stk = new StringTokenizer(authorization);
 		stk.nextToken();
 		String token = stk.nextToken();
-		List<Map> result = null;
-		if(token.equals("NONE")) {
 
-			result = new ArrayList<Map>();
+		map.put("user_seq_no", user_seq_no);
+		map.put("fintech_use_num", fintech_use_num);
+		Map result = new HashMap();
+		if(token.equals("NONE")) {
 			Map res = new HashMap();
 			res.put("resp_code", ResponeCode.ERROR_AUTHTOKEN);
-			result.add(res);
-			return result;
+			return res;
 		}
 		
 		MyUtils.sout(map);
 		//유저가 맞는 경우 
 		if(authservice.isUser(map)) {
+			List<Map>res_list = accountservice.getAllTrading(map);
+			result.put("resp_code",ResponeCode.OK);
+			result.put("res_list", res_list);
+			return result;
 			
-			result=accountservice.getAllTrading(map);
+			
 		}else {
-			result = new ArrayList<Map>();
-			Map res = new HashMap();
-			res.put("resp_code", ResponeCode.ERROR_AUTHTOKEN);
-			result.add(res);
+			result.put("resp_code", ResponeCode.ERROR_AUTHTOKEN);
 			
 		}
 		

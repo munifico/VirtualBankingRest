@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jsikmc15.virtualbankingrest.dao.TotalDAO;
 import com.jsikmc15.virtualbankingrest.dtos.AccountDTO;
 import com.jsikmc15.virtualbankingrest.utils.ResponeCode;
@@ -51,7 +52,13 @@ public class AccountServiceImpl  implements AccountService{
 	@Override
 	public List<Map> getAllTrading(Map map) {
 		// TODO Auto-generated method stub
-		return dao.getAllTrading(map);
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+		//return dao.getAllTrading(map);
+		return mapper.convertValue(dao.getAllAccounts(map),
+				TypeFactory.defaultInstance().constructCollectionType(List.class, Map.class));
 	}
 
 

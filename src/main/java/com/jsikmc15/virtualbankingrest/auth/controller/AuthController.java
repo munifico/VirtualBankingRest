@@ -82,7 +82,6 @@ public class AuthController {
 		for(String key : keys) {
 			System.out.println(key+ " - " + result.get(key));
 		}
-		
 //		testCode
 //		Map result = null; 
 //		String test ="{\"access_token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIxMTAxMDAxNzE1Iiwic2NvcGUiOlsiaW5xdWlyeSIsImxvZ2luIiwidHJhbnNmZXIiXSwiaXNzIjoiaHR0cHM6Ly93d3cub3BlbmJhbmtpbmcub3Iua3IiLCJleHAiOjE2NTAxODAwNzgsImp0aSI6IjdhMWM5YTAwLWVmYzAtNDlhMi1iMGY5LTlkNjYzMWMzOGQ3NCJ9.SaYb_j0ne052oRfHwiMHq2y2GgLW9qnhxrGOhIuIegA\",\"token_type\":\"Bearer\",\"refresh_token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIxMTAxMDAxNzE1Iiwic2NvcGUiOlsiaW5xdWlyeSIsImxvZ2luIiwidHJhbnNmZXIiXSwiaXNzIjoiaHR0cHM6Ly93d3cub3BlbmJhbmtpbmcub3Iua3IiLCJleHAiOjE2NTEwNDQwNzgsImp0aSI6ImFlNTlhMGE2LTZhOGEtNDY3Mi1iODMzLTc3YTU0NDJjNzkzZSJ9.R3R64fubQa0dnm4GN-Jqj9CNNaXKqnoYsfXk4tEMnUs\",\"expires_in\":7775999,\"scope\":\"inquiry login transfer\",\"user_seq_no\":\"1103001715\"}";
@@ -106,6 +105,7 @@ public class AuthController {
 		}else {
 			//최초 계좌 생성인 경우, insert 시나리오 
 			affect =authservice.registNew(result);
+			
 		}
 		
 		if(affect ==0 ) {

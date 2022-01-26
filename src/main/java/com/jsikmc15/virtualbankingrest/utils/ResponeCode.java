@@ -7,5 +7,6 @@ public interface ResponeCode {
 	String ERROR_USER = "A0101";
 	String ERROR="A1000";
 	String ERROR_LACKOFBALANCE = "A2000";
+	Object NO_DATA = "A3001";
 	
 }

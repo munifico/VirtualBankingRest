@@ -102,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
 		res.put("balance_amt",new Random().nextInt()*(5000000-80000+1)+80000);
 		res.put("account_type",0);
 		map.put("user_ci", res.get("user_ci"));
-		
+		map.put("fintech_use_num",accountDTO.getFintech_use_num());
 		Set<String> keys = map.keySet();
 		for(String key : keys) {
 			res.put(key,map.get(key));
@@ -185,7 +185,7 @@ public class AuthServiceImpl implements AuthService {
 		res.put("balance_amt",new Random().nextInt()*(5000000-80000+1)+80000);
 		res.put("account_type",0);
 		
-		
+		map.put("fintech_use_num",accountDTO.getFintech_use_num());
 		map.put("user_ci", res.get("user_ci"));
 		Set<String> datas = res.keySet();
 		for(String key :datas) {
@@ -195,7 +195,7 @@ public class AuthServiceImpl implements AuthService {
 		int affected2 = dao.insertUserAccount(res);
 		
 		
-		return affected1*affected2;
+		return affected1*affected2 ;
 	}
 
 	@Override
