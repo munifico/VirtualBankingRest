@@ -99,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
 		res.put("account_holder_name",accountDTO.getAccount_holder_name());
 		res.put("bank_name",accountDTO.getBank_name());
 		res.put("product_name",accountDTO.getBank_code_std());
-		res.put("balance_amt",new Random().nextInt()*(5000000-80000+1)+80000);
+		res.put("balance_amt",500000000); // 70백만원에서 80만원 사이 금액 
 		res.put("account_type",0);
 		map.put("user_ci", res.get("user_ci"));
 		map.put("fintech_use_num",accountDTO.getFintech_use_num());
@@ -182,7 +182,7 @@ public class AuthServiceImpl implements AuthService {
 		res.put("account_holder_name",accountDTO.getAccount_holder_name());
 		res.put("bank_name",accountDTO.getBank_name());
 		res.put("product_name",accountDTO.getBank_code_std());
-		res.put("balance_amt",new Random().nextInt()*(5000000-80000+1)+80000);
+		res.put("balance_amt",500000000);
 		res.put("account_type",0);
 		
 		map.put("fintech_use_num",accountDTO.getFintech_use_num());

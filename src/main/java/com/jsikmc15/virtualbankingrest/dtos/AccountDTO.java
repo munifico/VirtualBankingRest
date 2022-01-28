@@ -18,7 +18,7 @@ public class AccountDTO {
 	private String account_holder_name;
 	private String bank_name;
 	private String product_name;
-	private int balance_amt;
+	private Long balance_amt;
 	private int account_type;
 	 
 	public AccountDTO() {

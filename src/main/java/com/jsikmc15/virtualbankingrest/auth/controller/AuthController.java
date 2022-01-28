@@ -1,9 +1,12 @@
 package com.jsikmc15.virtualbankingrest.auth.controller;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,8 +26,11 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsikmc15.virtualbankingrest.auth.service.AuthService;
 import com.jsikmc15.virtualbankingrest.dtos.TokenDTO;
+import com.jsikmc15.virtualbankingrest.dtos.TradingDTO;
+import com.jsikmc15.virtualbankingrest.transfer.service.TransferService;
 import com.jsikmc15.virtualbankingrest.utils.MyUtils;
 import com.jsikmc15.virtualbankingrest.utils.ResponeCode;
+import com.jsikmc15.virtualbankingrest.utils.TransactionGenerator;
 
 import net.bytebuddy.description.ByteCodeElement.Token;
 
@@ -34,11 +40,16 @@ public class AuthController {
 	@Autowired
 	AuthService authservice;
 	
+	@Autowired
+	TransferService transferService;
+	
+	@Autowired
+	TransactionGenerator transactionGenerator;
+	
 	@GetMapping(value="/oauth",produces = {"application/json;charset=utf-8"})
 	public Map getAuthUrl(@RequestParam Map map,HttpServletRequest req) {
 		
 
-		System.out.println("아니 하나도 없는게 말이야 막걸리야 ");
 		
 		if(req.getHeader("USER_SEQ_NO")!=null) {
 			map.put("USER_SEQ_NO", req.getHeader("USER_SEQ_NO"));
@@ -64,9 +75,13 @@ public class AuthController {
 	//반환은 반드시 Token 관련 데이터를 줘야함
 	@PostMapping(value="/oauth/token")
 	public Map setToken(@RequestBody Map map) {
-		
+		Map error = new HashMap();
+		Map result;
+		try {
 		//계좌 등록코드를 받으면 AuthCode를 Token 정보를 모두 가져옴
-		Map result = authservice.setToken(map);
+		result = authservice.setToken(map);
+		error.put("access_token", result.get("access_token"));
+		
 		System.out.println("clear");
 		System.out.println(result.get("user_seq_no"));
 		int affect = 0;
@@ -95,8 +110,7 @@ public class AuthController {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		
-		
+
 		//seq를 통해 이미 등록된 사용자인지 판단
 		if(result.get("user_seq_no")!=null && authservice.isUser(result)) {
 			//계좌가 1회 이상 등록된 사용자라면, update 시나리오 탐
@@ -107,12 +121,58 @@ public class AuthController {
 			affect =authservice.registNew(result);
 			
 		}
+		String fin = result.get("fintech_use_num").toString();
+		error.put("fintech_use_num",fin);
+		System.out.println("◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀TEST▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶");
+		int kind = transactionGenerator.getOfficialCnt();
+		
+		
+		System.out.println("■■■■■■");
+		//OTT 결제 
+		List<TradingDTO> data = transactionGenerator.getContent((new Random().nextInt(15-3+1)+3),
+				new java.util.Date(),fin,(new Random().nextInt(kind)));
+		System.out.println("■■■■■■");
+		for(TradingDTO dto : data) {
+			System.out.println(dto.toString());
+			transferService.insertTestSet(dto);
+		}
+		//정기 결제 
+		System.out.println("▲▲▲▲▲▲");
+		data = transactionGenerator.getExternalContent((new Random().nextInt(15-3+1)+3),
+				new java.util.Date(),true, fin,(new Random().nextInt(kind)));
+		System.out.println("▲▲▲▲▲▲");
+		for(TradingDTO dto : data) {
+
+			System.out.println(dto.toString());
+			transferService.insertTestSet(dto);
+		}
+		
+		
+		//비정기 결제 
+		System.out.println("▼▼▼▼▼▼▼");
+		data = transactionGenerator.getExternalContent((new Random().nextInt(15-3+1)+3),
+				new java.util.Date(),false, fin,(new Random().nextInt(kind)));
+		System.out.println("▼▼▼▼▼▼▼");
+		for(TradingDTO dto : data) {
+			System.out.println(dto.toString());
+			transferService.insertTestSet(dto);
+		}
+		System.out.println("▼▼▼▼▼▼▼");
+
 		
 		if(affect ==0 ) {
 			result.put("resp_code",ResponeCode.ERROR );
 		}else {
 			result.put("resp_code",ResponeCode.OK);
 		}
+		
+		System.out.println("◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀◀TEST▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶");
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+			return error;
+		}
+
 		
 		return result;
 	}

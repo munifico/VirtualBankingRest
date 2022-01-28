@@ -57,7 +57,7 @@ public class AccountServiceImpl  implements AccountService{
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		
 		//return dao.getAllTrading(map);
-		return mapper.convertValue(dao.getAllAccounts(map),
+		return mapper.convertValue(dao.getAllTrading(map),
 				TypeFactory.defaultInstance().constructCollectionType(List.class, Map.class));
 	}
 

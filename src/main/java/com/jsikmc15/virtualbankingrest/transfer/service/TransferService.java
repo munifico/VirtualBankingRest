@@ -1,6 +1,9 @@
 package com.jsikmc15.virtualbankingrest.transfer.service;
 
+import java.util.List;
 import java.util.Map;
+
+import com.jsikmc15.virtualbankingrest.dtos.TradingDTO;
 
 public interface TransferService {
 
@@ -11,6 +14,8 @@ public interface TransferService {
 	
 	//거래처리 
 	public int insertTradingStatement(Map map);
+
+	public int insertTestSet(TradingDTO data);
 	
 	
 }

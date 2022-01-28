@@ -1,6 +1,7 @@
 package com.jsikmc15.virtualbankingrest.transfer.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsikmc15.virtualbankingrest.dao.TotalDAO;
 import com.jsikmc15.virtualbankingrest.dtos.AccountDTO;
+import com.jsikmc15.virtualbankingrest.dtos.TradingDTO;
 import com.jsikmc15.virtualbankingrest.utils.MyUtils;
 
 @Service("tranferservice")
@@ -36,7 +38,7 @@ public class TransferServiceImpl implements TransferService {
 		int affect_td = dao.insertTradingStatement(map);
 		
 
-		int cost = Integer.parseInt(map.get("cost").toString());
+		Long cost = Long.parseLong(map.get("cost").toString());
 		System.out.println("출금이체");;
 		AccountDTO wd =dao.selelctAccount(withdraw);
 		if(wd.getBalance_amt() < cost) {
@@ -67,7 +69,7 @@ public class TransferServiceImpl implements TransferService {
 			throw new RuntimeException();
 		}
 		
-		return 1;
+		return affect_td*affect_dps*affect_td;
 	}
 
 
@@ -94,6 +96,37 @@ public class TransferServiceImpl implements TransferService {
 //		}
 		
 		return true;
+	}
+
+
+	@Transactional
+	@Override
+	public int insertTestSet(TradingDTO data) {
+		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
+				Map withdraw = new HashMap() ;
+
+				
+
+				withdraw.put("fintech_use_num", data.getWd_uid());
+				
+
+				Long cost =  (long) data.getTran_amt();
+				System.out.println("출금이체");
+				AccountDTO wd =dao.selelctAccount(withdraw);
+				if(wd.getBalance_amt() < cost) {
+					return 3;
+				}
+				
+				MyUtils.sout(withdraw);
+				System.out.println(wd.toString());
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	
+				int affect_wd = dao.insertTestCase(data);
+				
+
+				return affect_wd;
 	}
 
 }

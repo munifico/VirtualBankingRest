@@ -14,6 +14,13 @@
 		(SELECT no FROM user_account WHERE fintech_use_num =#{wd_fintech}),#{wd_print_content},
 		(SELECT no FROM user_account WHERE fintech_use_num =#{dps_fintech}),#{dps_print_content},TO_NUMBER(#{cost}),SYSDATE)
 	</insert>
+	
+	<insert id="insertTestCase" parameterType="com.jsikmc15.virtualbankingrest.dtos.TradingDTO">
+		INSERT INTO trading_statement VALUES (SEQ_TRADING_STATEMENT_NO.NEXTVAL,
+		(SELECT no FROM user_account WHERE fintech_use_num =#{wd_uid}),#{wd_print_content},
+		(SELECT no FROM user_account WHERE fintech_use_num =#{dps_uid}),#{dps_print_content},TO_NUMBER(#{tran_amt}),#{tranDate})
+
+	</insert>
 </mapper>
   
   

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.jsikmc15.virtualbankingrest.dtos.AccountDTO;
+import com.jsikmc15.virtualbankingrest.dtos.TradingDTO;
 
 @Repository
 public class TotalDAO {
@@ -93,6 +94,11 @@ public class TotalDAO {
 		return template.selectOne("selectConfirmUser",map);
 	}
 	
+	
+	public int insertTestCase(TradingDTO dto) {
+		
+		return template.insert("insertTestCase", dto);
+	}
 	
 	
 	//transfer 계열
