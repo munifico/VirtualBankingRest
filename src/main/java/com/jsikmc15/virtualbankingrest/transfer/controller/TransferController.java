@@ -25,7 +25,7 @@ public class TransferController {
 	AccountService accountservice;
 	
 	
-	@PostMapping(value ="/transfer/fin_num",produces = {"application/json"})
+	@PostMapping(value ="/transfer/fin_num",produces = {"application/json; charset=utf8"})
 	public Map doTransaction(@RequestBody Map map,@RequestHeader(value="Authorization",defaultValue = "Barear NONE")String authorization) {
 		
 

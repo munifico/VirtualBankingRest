@@ -40,8 +40,8 @@ public class TransactionGenerator {
     
     public TransactionGenerator() {
         dateGen = new DateGenerator();
-        test_fin_num = "999";
-        admin_fin_num = "100";
+        test_fin_num = "sample_fintech";
+        admin_fin_num = "sample_fintech";
 
     }
 
