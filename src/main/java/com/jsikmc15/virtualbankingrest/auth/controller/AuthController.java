@@ -46,10 +46,9 @@ public class AuthController {
 	@Autowired
 	TransactionGenerator transactionGenerator;
 	
+	//본인인증 url 생성 및 전달 
 	@GetMapping(value="/oauth",produces = {"application/json;charset=utf-8"})
 	public Map getAuthUrl(@RequestParam Map map,HttpServletRequest req) {
-		
-
 		
 		if(req.getHeader("USER_SEQ_NO")!=null) {
 			map.put("USER_SEQ_NO", req.getHeader("USER_SEQ_NO"));
@@ -57,7 +56,6 @@ public class AuthController {
 			map.put("USER_CI", req.getHeader("USER_CI"));
 			map.put("callbackUrl", req.getHeader("callbackUrl"));
 		}
-		
 		Map result = authservice.getAuthUrl(map);
 		
 		if(result.get("location")!=null) {
@@ -65,15 +63,11 @@ public class AuthController {
 		}else {
 			result.put("resp_code",ResponeCode.ERROR);
 		}
-		
 		return result;
 	}
 	
 	
-	//scene:
-	//auth 에서 callbackurl을 메인서버쪽에서 주고,받자마자,  
-	//메인서버에서 이리로 post매핑 code 값으로 token을 가져오니 반드시 줘야함
-	//반환은 반드시 Token 관련 데이터를 줘야함
+	//vbankServer단 인증
 	@PostMapping(value="/oauth/token")
 	public Map setToken(@RequestBody Map map) {
 		Map error = new HashMap();
@@ -98,19 +92,6 @@ public class AuthController {
 		for(String key : keys) {
 			System.out.println(key+ " - " + result.get(key));
 		}
-//		testCode
-//		Map result = null; 
-//		String test ="{\"access_token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIxMTAxMDAxNzE1Iiwic2NvcGUiOlsiaW5xdWlyeSIsImxvZ2luIiwidHJhbnNmZXIiXSwiaXNzIjoiaHR0cHM6Ly93d3cub3BlbmJhbmtpbmcub3Iua3IiLCJleHAiOjE2NTAxODAwNzgsImp0aSI6IjdhMWM5YTAwLWVmYzAtNDlhMi1iMGY5LTlkNjYzMWMzOGQ3NCJ9.SaYb_j0ne052oRfHwiMHq2y2GgLW9qnhxrGOhIuIegA\",\"token_type\":\"Bearer\",\"refresh_token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIxMTAxMDAxNzE1Iiwic2NvcGUiOlsiaW5xdWlyeSIsImxvZ2luIiwidHJhbnNmZXIiXSwiaXNzIjoiaHR0cHM6Ly93d3cub3BlbmJhbmtpbmcub3Iua3IiLCJleHAiOjE2NTEwNDQwNzgsImp0aSI6ImFlNTlhMGE2LTZhOGEtNDY3Mi1iODMzLTc3YTU0NDJjNzkzZSJ9.R3R64fubQa0dnm4GN-Jqj9CNNaXKqnoYsfXk4tEMnUs\",\"expires_in\":7775999,\"scope\":\"inquiry login transfer\",\"user_seq_no\":\"1103001715\"}";
-//		int affect = 0;
-//		ObjectMapper mapper = new ObjectMapper();
-//		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//		
-//		try {
-//			result = mapper.readValue(test, Map.class);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 
 		//seq를 통해 이미 등록된 사용자인지 판단
 		if(result.get("user_seq_no")!=null && authservice.isUser(result)) {
@@ -150,15 +131,12 @@ public class AuthController {
 		
 		
 		//비정기 결제 
-		System.out.println("▼▼▼▼▼▼▼");
 		data = transactionGenerator.getExternalContent((new Random().nextInt(15-3+1)+3),
 				new java.util.Date(),false, fin,(new Random().nextInt(kind)));
-		System.out.println("▼▼▼▼▼▼▼");
 		for(TradingDTO dto : data) {
 			System.out.println(dto.toString());
 			transferService.insertTestSet(dto);
 		}
-		System.out.println("▼▼▼▼▼▼▼");
 
 		
 		if(affect ==0 ) {
