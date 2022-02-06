@@ -76,7 +76,6 @@ public class AccountController {
 		//유저가 맞는 경우 
 		if(authservice.isUser(map)) {
 			
-			
 			result =accountservice.getAccount(map);
 			result.put("resp_code",ResponeCode.OK);
 		}else {
@@ -97,7 +96,6 @@ public class AccountController {
 		StringTokenizer stk = new StringTokenizer(authorization);
 		stk.nextToken();
 		String token = stk.nextToken();
-
 		map.put("user_seq_no", user_seq_no);
 		map.put("fintech_use_num", fintech_use_num);
 		Map result = new HashMap();
@@ -106,7 +104,6 @@ public class AccountController {
 			res.put("resp_code", ResponeCode.ERROR_AUTHTOKEN);
 			return res;
 		}
-		
 		MyUtils.sout(map);
 		//유저가 맞는 경우 
 		if(authservice.isUser(map)) {
@@ -114,17 +111,9 @@ public class AccountController {
 			result.put("resp_code",ResponeCode.OK);
 			result.put("res_list", res_list);
 			return result;
-			
-			
 		}else {
 			result.put("resp_code", ResponeCode.ERROR_AUTHTOKEN);
-			
 		}
-		
-		
-		
-		
-		
 		return result;
 	}
 	

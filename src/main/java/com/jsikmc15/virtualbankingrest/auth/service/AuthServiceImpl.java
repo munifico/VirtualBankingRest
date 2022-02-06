@@ -214,9 +214,9 @@ public class AuthServiceImpl implements AuthService {
 			System.out.println("적용함");
 		}
 		HttpEntity<String> request = new HttpEntity("", myheader);
-		String url = "https://developers.kftc.or.kr/proxy/oauth/2.0/authorize?response_type=code&client_id="+clientID+"&redirect_uri="+callbackURI+"&scope=login inquiry transfer&client_info=test&state=b80BLsfigm9OokPTjy03elbJqRHOfGSY&auth_type="+type+"&cellphone_cert_yn=Y&authorized_cert_yn=Y&account_hold_auth_yn=N&register_info=A";
+//		String url = "https://developers.kftc.or.kr/proxy/oauth/2.0/authorize?response_type=code&client_id="+clientID+"&redirect_uri="+callbackURI+"&scope=login inquiry transfer&client_info=test&state=b80BLsfigm9OokPTjy03elbJqRHOfGSY&auth_type="+type+"&cellphone_cert_yn=Y&authorized_cert_yn=Y&account_hold_auth_yn=N&register_info=A";
+		String url = "https://developers.kftc.or.kr/proxy/oauth/2.0/authorize?response_type=code&client_id="+clientID+"&redirect_uri="+map.get("callbackUrl").toString()+"&scope=login inquiry transfer&client_info=test&state=b80BLsfigm9OokPTjy03elbJqRHOfGSY&auth_type="+type+"&cellphone_cert_yn=Y&authorized_cert_yn=Y&account_hold_auth_yn=N&register_info=A";
 
-		
 		System.out.println("보내는 Request Entity 정보 : " + request.getHeaders());
 		System.out.println("보내는 Request Entity 정보 : " + request.getBody());
 		System.out.println("URL 정보 : " + url);

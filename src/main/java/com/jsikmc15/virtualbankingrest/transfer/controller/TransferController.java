@@ -25,17 +25,17 @@ public class TransferController {
 	AccountService accountservice;
 	
 	
+	
+	//거래
 	@PostMapping(value ="/transfer/fin_num",produces = {"application/json; charset=utf8"})
 	public Map doTransaction(@RequestBody Map map,@RequestHeader(value="Authorization",defaultValue = "Barear NONE")String authorization) {
 		
-
 		Map result = new HashMap(); 
 		//인증 토큰 확인
 		if(authorization.split(" ")[0].equals("NONE")) {
 			result.put("resp_code", ResponeCode.ERROR_AUTHTOKEN);
 			return result;
 		}
-		
 		//인출자의 계좌를 조회하여, 금액이 충분한지 확인한다.
 
 			//충분하다면, 서비스를 수행한다.

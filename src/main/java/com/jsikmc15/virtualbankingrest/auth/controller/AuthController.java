@@ -55,6 +55,7 @@ public class AuthController {
 			map.put("USER_SEQ_NO", req.getHeader("USER_SEQ_NO"));
 			map.put("ACCESS_TOKEN", req.getHeader("ACCESS_TOKEN"));
 			map.put("USER_CI", req.getHeader("USER_CI"));
+			map.put("callbackUrl", req.getHeader("callbackUrl"));
 		}
 		
 		Map result = authservice.getAuthUrl(map);
@@ -136,7 +137,7 @@ public class AuthController {
 			System.out.println(dto.toString());
 			transferService.insertTestSet(dto);
 		}
-		//정기 결제 
+		//비정기 결제 
 		System.out.println("▲▲▲▲▲▲");
 		data = transactionGenerator.getExternalContent((new Random().nextInt(15-3+1)+3),
 				new java.util.Date(),true, fin,(new Random().nextInt(kind)));
